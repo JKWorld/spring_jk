@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<context:annotation-config/>
+	
+	<!-- 스프링 환경에서 fileUpload시 반드시 선언해야 하는 빈객체의
+	id는 꼭 multipartResolver야 한다. -->
+	<bean id="multipartResolver"
+	  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	 	<property name="defaultEncoding" value="utf-8"/>
+	 	<property name="maxUploadSize" value="-1"/> 
+	 </bean>
+	 
+	 <!-- 컨트롤러들 선언하자! -->
+	 <bean name="/list.inc" class="spring.control.ListControl">
+	 	<property name="dao" ref="dao"/>
+	 </bean>
+	 
+	 <bean id="write" class="spring.control.WriteControl">
+	 	<property name="uploadPath" value="upload"/>
+	 </bean>
+	 
+	 <bean name="/writeForm.inc" class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+	 	<property name="viewName" value="/write"/>
+	 </bean>
+	 
+	 <bean name="/view.inc" class="spring.control.ViewControl">
+	 	<property name="dao" ref="dao"/>
+	 </bean>
+	 
+	 <bean name="/modify.inc" class="spring.control.ModifyControl">
+	 	<property name="dao" ref="dao"/>
+	 </bean>
+	 
+	 <bean name="/del.inc" class="spring.control.DelControl">
+	 	<property name="dao" ref="dao"/>
+	 </bean>
+	 
+	 <bean name="/rwrite.inc" class="spring.control.RwriteControl">
+	 	<property name="dao" ref="dao"/>
+	 </bean>
+	 
+	 <bean name="/login.inc" class="spring.control.LoginControl">
+	 	<property name="dao" ref="dao"/>
+	 </bean>
+	 
+	 
+	 <!-- View Resolver선언하자!-->
+	 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	 	<property name="prefix" value="/"/>
+	 	<property name="suffix" value=".jsp"/>
+	 	<property name="contentType" value="text/html; charset=UTF-8"/>
+	 </bean>
+	
+</beans>

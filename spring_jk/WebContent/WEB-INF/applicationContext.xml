@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<context:property-placeholder
+		location="classpath:mybatis/props/db.properties"/>
+	<bean id="ds" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName"
+			value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.pwd}"/>
+		<property name="defaultAutoCommit" value="false"/>
+	</bean>
+	
+	<bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds"/>
+		<property name="mapperLocations" 
+			value="classpath*:mybatis/mapper/*.xml"/>
+	</bean>
+	
+	<bean id="ss" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="factory"/>
+	</bean>
+	
+	<bean id="dao" class="mybatis.dao.JKBoardDAO" autowire="byName">
+		<property name="ss" ref="ss"/>
+	</bean>
+	
+</beans>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+  
+  <!-- 리스트 기능! -->
+  <select id="list" resultType="mybatis.vo.JKBoardVO" parameterType="java.util.Map">
+  	select * from jkboard 
+  	where status=#{status} order by seq desc limit #{begin},#{end}
+  </select>
+  
+  
+  <!-- 게시물을 저장하는 기능! -->
+  <insert id="write" parameterType="mybatis.vo.JKBoardVO">
+  	INSERT INTO jkboard(writer, title, content, pwd,
+  		hit, groups, step, lev, bname, regdate, ip, uploadFileName, status)
+  	VALUES(#{writer}, #{title}, #{content}, #{pwd},
+  		0,1, 0, 0, 
+  		'BBS', #{regdate}, #{ip}, #{uploadFileName}, 0)
+  </insert>
+  
+  <!-- 게시물 보기 기능! -->
+  <select id="view" parameterType="string" resultType="mybatis.vo.JKBoardVO">
+	SELECT * FROM jkboard
+	WHERE seq = #{seq}
+  </select>
+  
+  <!-- 게시물 수정 기능! -->
+  <select id="update" parameterType="mybatis.vo.JKBoardVO">
+  	UPDATE jkboard SET title=#{title}, content=#{content}, writer=#{writer}
+  	WHERE seq=#{seq}
+  </select>
+  
+  <!-- 게시물 삭제 기능! -->
+  <update id="delete" parameterType="java.util.Map">
+  	UPDATE jkboard SET status=#{a}
+  	WHERE seq=#{seq}
+  </update>
+  
+  <!-- 한 게시물의 댓글들 -->
+  <select id="reply"  resultType="mybatis.vo.JKReplyVO" parameterType="java.util.Map">
+  	SELECT * FROM jkreply
+  	WHERE seq=#{seq}
+  </select>
+  
+  <!-- 댓글 달기 기능 -->
+  <insert id="rwrite" parameterType="mybatis.vo.JKReplyVO">
+  	INSERT INTO jkreply(content, ip, seq ,status)
+  	VALUES(#{content}, #{ip}, #{seq}, 0)
+  </insert>
+  
+  <!-- 페이징 기법을 위한 전체 게시물의 수를 반환하는 기능 -->
+  <select id="totalCount" resultType="int"
+  parameterType="String">
+  	SELECT count(*) FROM jkboard
+  	WHERE status=#{status}
+  </select>
+  
+  <!-- 게시물 삭제 기능! -->
+  <update id="uphit" parameterType="java.util.Map">
+  	UPDATE jkboard SET hit=#{hit}
+  	WHERE seq=#{seq}
+  </update>
+  
+  <!-- 한 게시물의 댓글들 -->
+  <select id="login"  resultType="mybatis.vo.MemberVO" parameterType="java.util.Map">
+  	SELECT * FROM jkmembers
+  	WHERE id=#{id} AND pwd=#{pwd}
+  </select>
+  
+</mapper>
